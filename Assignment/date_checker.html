@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Checker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Date Checker</h1>
+        <div class="date-form">
+            <div class="input-group">
+                <label for="day">Day:</label>
+                <input type="number" id="day" min="1" max="31" placeholder="DD">
+            </div>
+
+            <div class="input-group">
+                <label for="month">Month:</label>
+                <input type="number" id="month" min="1" max="12" placeholder="MM">
+            </div>
+
+            <div class="input-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" min="1900" max="2100" placeholder="YYYY">
+            </div>
+
+            <button onclick="checkDate()" class="check-btn">Check Date</button>
+
+            <div id="result" class="result"></div>
+        </div>
+
+        <div class="current-date">
+            <h3>Current Date:</h3>
+            <p id="current"></p>
+        </div>
+    </div>
+
+    <script>
+        function checkDate() {
+            const day = parseInt(document.getElementById('day').value);
+            const month = parseInt(document.getElementById('month').value);
+            const year = parseInt(document.getElementById('year').value);
+            const resultDiv = document.getElementById('result');
+
+            // Reset previous results
+            resultDiv.className = 'result';
+
+            // Validation
+            if (!day || !month || !year) {
+                resultDiv.innerHTML = '<p class="error">Please enter all fields (day, month, year)</p>';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            // Check if date is valid
+            const date = new Date(year, month - 1, day);
+
+            if (date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day) {
+                resultDiv.innerHTML = '<p class="error">Invalid date! Please check your input.</p>';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            // Date is valid
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+            resultDiv.innerHTML = `
+                <p class="success">✅ Valid Date!</p>
+                <p><strong>Full Date:</strong> ${formattedDate}</p>
+                <p><strong>Day of Week:</strong> ${dayOfWeek}</p>
+                <p><strong>Format:</strong> ${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}</p>
+            `;
+            resultDiv.className = 'result success';
+        }
+
+        // Display current date
+        function displayCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('current').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Initialize
+        displayCurrentDate();
+
+        // Allow Enter key to trigger check
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkDate();
+            }
+        });
+    </script>
+</body>
+
+</html>

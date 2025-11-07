@@ -1,0 +1,5 @@
+# Node modules
+Assignment/node_modules/
+# Environment variables
+.env
+Assignment/.env
